@@ -1,17 +1,20 @@
+import os
 import torch
+from dotenv import load_dotenv
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters, ContextTypes
 
 # ==========================
-# CONFIG
+# CARGAR VARIABLES .ENV
 # ==========================
 
-TELEGRAM_TOKEN = "8419596147:AAF1JO_gNT8ClNGdOSA6oxpKI6ZN7sGM41Y"
+load_dotenv()
 
-BASE_MODEL = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-LORA_MODEL = "SxntyM/innt_chat"
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+BASE_MODEL = os.getenv("BASE_MODEL")
+LORA_MODEL = os.getenv("LORA_MODEL")
 
 # ==========================
 # CARGAR MODELO
@@ -59,7 +62,6 @@ def generar_respuesta(pregunta):
 
     texto = tokenizer.decode(output[0], skip_special_tokens=True)
 
-    # cortar solo la parte de la respuesta
     respuesta = texto.split("### Response:")[-1].strip()
 
     return respuesta
